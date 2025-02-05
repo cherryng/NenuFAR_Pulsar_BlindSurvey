@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 import matplotlib.cm
+import matplotlib.ticker as ticker
 import sys
 
 INF = sys.argv[1]
@@ -72,7 +73,7 @@ ax.set_ylabel("Frequency channel")
 #Show the presto detections
 ax2 = plt.subplot(gs[0]) #Label candidates found from presto
 
-SPcands = np.loadtxt(INFcands,dtype=int) #in seconds
+SPcands = np.loadtxt(INFcands,dtype=float) #in seconds
 SNRs = SPcands[:, 1]
 Times = SPcands[:, 2]
 
@@ -80,12 +81,22 @@ ax2.scatter(Times, SNRs, marker='x',c='k')
 for xi, yi in zip(Times, SNRs):
     ax2.vlines(xi, 0, yi, color='black', zorder=2)  # Vertical line from 0 to y-value
 
+#Say we know 17.259561 is good, plot the known pulsar period in blue
+"""for i in range(500):
+    ax2.axvline(x=17.259561+1.29227*i, c='b', ls=':', zorder=0)
+    ax2.axvline(x=17.259561-1.29227*i, c='b', ls=':', zorder=0)    
+"""
+
 ax2.set_xlim(starttime, endtime)
-ax2.grid()
 ax2.set_ylim(0, 19)
 ax2.set_xlabel("")
-ax2.set_xticks([])
 ax2.set_ylabel("SNR from presto")
+ax2.xaxis.set_major_locator(ticker.MaxNLocator(nbins=10)) 
+ax2.grid(True)
+
+
+ax2.xaxis.set_label_position('top') 
+ax2.xaxis.tick_top() 
 plt.show()
 
             
